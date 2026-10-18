@@ -104,7 +104,7 @@ export default function InterviewsPage() {
   ];
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b pb-4">
           <div>

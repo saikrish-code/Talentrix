@@ -21,7 +21,7 @@ export default function EmailTemplatesPage() {
       setPersonalizing(false);
       setSubject('Exciting News: Your Offer to Join Talentrix as Senior Full Stack Engineer');
       setBody(
-        `Dear Sarah,\n\nFollowing your outstanding performance across our technical rounds and system design panel at Talentrix, we are thrilled to offer you the Senior Full Stack Engineer role.\n\nWe were especially impressed by your work scaling microservices at Stripe. We're excited for you to bring that expertise to our core platform.\n\nWarm regards,\nSarah Jenkins & The Talentrix Team`
+        `Dear Sarah,\n\nFollowing your outstanding performance across our technical rounds and system design panel at Talentrix, we are thrilled to offer you the Senior Full Stack Engineer role.\n\nWe were especially impressed by your work scaling microservices at Stripe. We're excited for you to bring that expertise to our core platform.\n\nWarm regards,\nSai Krishna S & The Talentrix Team`
       );
     }, 1000);
   };
@@ -32,7 +32,7 @@ export default function EmailTemplatesPage() {
   };
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b pb-4">
           <div>

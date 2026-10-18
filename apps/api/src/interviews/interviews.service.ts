@@ -61,6 +61,9 @@ export class InterviewsService {
     tenantId?: string;
   }) {
     const tenantId = dto.tenantId ?? 'default-tenant';
+    const randomCode = () => Math.random().toString(36).substring(2, 5) + '-' + Math.random().toString(36).substring(2, 6) + '-' + Math.random().toString(36).substring(2, 5);
+    const meetingUrl = dto.slot.meetingUrl ?? `https://meet.google.com/${randomCode()}`;
+    const slotWithMeet = { ...dto.slot, meetingUrl };
 
     const interview = await this.prisma.interview.create({
       data: {
@@ -68,7 +71,7 @@ export class InterviewsService {
         type: dto.type,
         round: dto.round ?? 1,
         status: InterviewStatus.SCHEDULED,
-        slot: dto.slot as any,
+        slot: slotWithMeet as any,
         calendarEventId: `cal_evt_${Math.random().toString(36).substring(7)}`,
         tenantId,
         scheduledById: dto.scheduledById,

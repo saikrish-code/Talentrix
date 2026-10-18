@@ -50,11 +50,11 @@ export default function PipelinePage() {
   }, []);
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b pb-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Recruitment Kanban Pipeline</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Recruitments</h1>
             <p className="text-sm text-muted-foreground">Drag-and-drop workflow across hiring stages. Candidates stuck &gt;5 days are flagged.</p>
           </div>
           {selectedIds.length > 0 && (
@@ -70,11 +70,12 @@ export default function PipelinePage() {
           )}
         </div>
 
-        <div className="grid grid-cols-7 gap-4 overflow-x-auto pb-6">
+        {/* Properly oriented horizontal scrolling Kanban board */}
+        <div className="flex gap-4 overflow-x-auto pb-6">
           {columns.map((col) => {
             const columnCards = cards.filter((c) => c.status === col.id);
             return (
-              <div key={col.id} className="flex flex-col rounded-lg bg-muted/30 border p-3 min-w-[220px]">
+              <div key={col.id} className="flex flex-col rounded-lg bg-muted/20 border p-3.5 w-72 shrink-0">
                 <div className="flex items-center justify-between pb-3 border-b mb-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider">{col.title}</h3>
                   <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-background border text-[10px] font-mono font-semibold">
@@ -82,14 +83,14 @@ export default function PipelinePage() {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-3">
+                <div className="flex-1 space-y-3 min-h-[300px]">
                   {columnCards.map((card) => {
                     const isSelected = selectedIds.includes(card.id);
                     return (
                       <Card
                         key={card.id}
                         className={cn(
-                          'transition-all hover:shadow-md cursor-pointer relative',
+                          'transition-all hover:shadow-md cursor-pointer relative bg-card',
                           card.stuck && 'border-amber-500/80 bg-amber-500/5',
                           isSelected && 'ring-2 ring-primary'
                         )}
@@ -101,7 +102,7 @@ export default function PipelinePage() {
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="text-[10px]">{card.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                               </Avatar>
-                              <span className="text-xs font-semibold truncate max-w-[110px]">{card.name}</span>
+                              <span className="text-xs font-semibold truncate max-w-[130px]">{card.name}</span>
                             </div>
                             <span className="text-[10px] font-mono font-bold text-emerald-600">{card.score}</span>
                           </div>
@@ -137,6 +138,11 @@ export default function PipelinePage() {
                       </Card>
                     );
                   })}
+                  {columnCards.length === 0 && (
+                    <div className="flex h-24 items-center justify-center rounded border border-dashed text-xs text-muted-foreground">
+                      No candidates
+                    </div>
+                  )}
                 </div>
               </div>
             );

@@ -32,7 +32,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <AppShell userRole={role} userName="Sarah Jenkins" userEmail="sarah@talentrix.io">
+    <AppShell userRole={role} userName="Sai Krishna S" userEmail="sai@talentrix.io">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b pb-4">
           <div>

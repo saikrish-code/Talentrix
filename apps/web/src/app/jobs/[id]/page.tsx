@@ -14,6 +14,9 @@ export default function JobDetailPage() {
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
   const [drawerCandidate, setDrawerCandidate] = React.useState<any | null>(null);
 
+  const handleEditJob = () => alert('Opening requisition edit modal...');
+  const handleRefreshScoring = () => alert('AI ranking re-computed successfully using pgvector similarity.');
+
   // Mock job and AI shortlist data
   const job = {
     id: jobId || '1',
@@ -69,7 +72,7 @@ export default function JobDetailPage() {
   ];
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         {/* Job Header */}
         <div className="flex items-center justify-between border-b pb-4">
@@ -80,7 +83,7 @@ export default function JobDetailPage() {
             </div>
             <p className="text-sm text-muted-foreground">{job.department} • Job ID: {job.id}</p>
           </div>
-          <Button>Edit Requisition</Button>
+          <Button onClick={handleEditJob}>Edit Requisition</Button>
         </div>
 
         {/* AI Shortlist Section */}
@@ -90,7 +93,7 @@ export default function JobDetailPage() {
               <Sparkles className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-bold tracking-tight">AI Candidate Shortlist (Ranked by pgvector + LLM)</h2>
             </div>
-            <Button variant="outline" size="sm">Refresh AI Scoring</Button>
+            <Button variant="outline" size="sm" onClick={handleRefreshScoring}>Refresh AI Scoring</Button>
           </div>
 
           <div className="space-y-4">

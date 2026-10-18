@@ -53,16 +53,18 @@ export default function InterviewKitPage() {
     setGenerating(true);
     setTimeout(() => {
       setGenerating(false);
+      alert('AI regenerated new interview questions based on candidate resume gap analysis.');
     }, 1000);
   };
 
   const handleSaveScorecard = () => {
     setSaved(true);
+    alert('Scorecard and competency ratings successfully saved against interview record.');
     setTimeout(() => setSaved(false), 3000);
   };
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-4">

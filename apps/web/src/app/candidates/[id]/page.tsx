@@ -13,6 +13,10 @@ export default function CandidateProfilePage() {
 
   const [recruiterDecision, setRecruiterDecision] = React.useState<string | null>(null);
 
+  const handleDownload = () => alert('Downloading original candidate resume PDF securely...');
+  const handleSchedule = () => alert('Opening interview scheduler for candidate...');
+  const handleDebrief = () => alert('Debrief meeting invitation sent to hiring panel.');
+
   // Mock candidate profile data including panel summary
   const candidate = {
     id: id || 'cand_1',
@@ -73,7 +77,7 @@ export default function CandidateProfilePage() {
   };
 
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-4">
@@ -95,10 +99,10 @@ export default function CandidateProfilePage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleDownload}>
               <Download className="mr-2 h-4 w-4" /> Download Resume PDF
             </Button>
-            <Button size="sm">Schedule Interview</Button>
+            <Button size="sm" onClick={handleSchedule}>Schedule Interview</Button>
           </div>
         </div>
 
@@ -125,7 +129,7 @@ export default function CandidateProfilePage() {
                     <div className="space-y-1">
                       <p className="text-xs font-bold text-amber-700">Divergence Flagged</p>
                       <p className="text-xs text-muted-foreground">{candidate.panelSummary.debriefPrompt}</p>
-                      <Button size="sm" variant="outline" className="mt-2 text-xs bg-background">
+                      <Button size="sm" variant="outline" className="mt-2 text-xs bg-background" onClick={handleDebrief}>
                         Schedule Debrief Meeting
                       </Button>
                     </div>

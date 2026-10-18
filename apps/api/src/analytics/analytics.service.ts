@@ -27,7 +27,7 @@ export class AnalyticsService {
         { stage: 'Hired', count: 12, conversionRate: 2.2 },
       ],
       recruiterWorkload: [
-        { recruiter: 'Sarah Jenkins', activeApplications: 48, interviewsScheduled: 12 },
+        { recruiter: 'Sai Krishna S', activeApplications: 48, interviewsScheduled: 12 },
         { recruiter: 'Alex Rivera', activeApplications: 36, interviewsScheduled: 8 },
         { recruiter: 'Elena Rostova', activeApplications: 42, interviewsScheduled: 10 },
       ],

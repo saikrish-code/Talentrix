@@ -23,9 +23,9 @@ export default function SettingsPage() {
 
   // Audit log mock data
   const auditLogs = [
-    { id: 'log_1', user: 'Sarah Jenkins (Recruiter)', action: 'Accepted AI Shortlist', candidate: 'Sarah Jenkins', job: 'Senior Full Stack', timestamp: '2026-10-18 10:30 UTC' },
+    { id: 'log_1', user: 'Sai Krishna S (Recruiter)', action: 'Accepted AI Shortlist', candidate: 'Sarah Jenkins', job: 'Senior Full Stack', timestamp: '2026-10-18 10:30 UTC' },
     { id: 'log_2', user: 'David Chen (Hiring Manager)', action: 'Overrode AI Recommendation', candidate: 'Alex Rivera', job: 'Product Manager', timestamp: '2026-10-17 14:15 UTC' },
-    { id: 'log_3', user: 'Sarah Jenkins (Recruiter)', action: 'Accepted AI Pre-Screen', candidate: 'David Chen', job: 'Staff Infrastructure', timestamp: '2026-10-16 09:45 UTC' },
+    { id: 'log_3', user: 'Sai Krishna S (Recruiter)', action: 'Accepted AI Pre-Screen', candidate: 'David Chen', job: 'Staff Infrastructure', timestamp: '2026-10-16 09:45 UTC' },
   ];
 
   const auditColumns = [
@@ -46,8 +46,12 @@ export default function SettingsPage() {
     }, 4000);
   };
 
+  const handleSaveAi = () => alert('AI model provider and matching weights saved successfully.');
+  const handleInviteUser = () => alert('Invitation email sent to new team member.');
+  const handleSaveBranding = () => alert('White-label tenant branding updated successfully.');
+
   return (
-    <AppShell userRole={UserRole.ADMIN} userName="Sarah Jenkins">
+    <AppShell userRole={UserRole.ADMIN} userName="Sai Krishna S">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b pb-4">
           <div>
@@ -140,7 +144,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <Button className="mt-4">Save AI Configuration</Button>
+                <Button className="mt-4" onClick={handleSaveAi}>Save AI Configuration</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -174,8 +178,8 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-3 border rounded-lg bg-card">
                   <div>
-                    <p className="text-sm font-semibold">Sarah Jenkins</p>
-                    <p className="text-xs text-muted-foreground">sarah@talentrix.io • Admin & Recruiter</p>
+                    <p className="text-sm font-semibold">Sai Krishna S</p>
+                    <p className="text-xs text-muted-foreground">sai@talentrix.io • Admin & Recruiter</p>
                   </div>
                   <Badge variant="success">Active</Badge>
                 </div>
@@ -186,7 +190,7 @@ export default function SettingsPage() {
                   </div>
                   <Badge variant="success">Active</Badge>
                 </div>
-                <Button variant="outline" size="sm">+ Invite New User</Button>
+                <Button variant="outline" size="sm" onClick={handleInviteUser}>+ Invite New User</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -255,7 +259,7 @@ export default function SettingsPage() {
                     <Input value={accentColor} onChange={(e) => setAccentColor(e.target.value)} />
                   </div>
                 </div>
-                <Button className="mt-2">Save Branding Settings</Button>
+                <Button className="mt-2" onClick={handleSaveBranding}>Save Branding Settings</Button>
               </CardContent>
             </Card>
           </TabsContent>

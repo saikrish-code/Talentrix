@@ -36,7 +36,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Building2,
+  Globe,
 } from 'lucide-react';
 import { cn } from '@talentrix/ui';
 
@@ -51,7 +51,7 @@ interface AppShellProps {
 export function AppShell({
   children,
   userRole = UserRole.RECRUITER,
-  userName = 'Sarah Jenkins',
+  userName = 'Sai Krishna S',
   tenantName = 'Acme Corp',
 }: AppShellProps) {
   const pathname = usePathname();
@@ -78,8 +78,8 @@ export function AppShell({
       roles: [UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.RECRUITER],
     },
     {
-      title: 'Pipeline',
-      href: '/pipeline',
+      title: 'Recruitments',
+      href: '/recruitments',
       icon: Kanban,
       roles: [UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.RECRUITER, UserRole.HIRING_MANAGER],
     },
@@ -94,6 +94,12 @@ export function AppShell({
       href: '/analytics',
       icon: BarChart3,
       roles: [UserRole.ADMIN, UserRole.HR_MANAGER],
+    },
+    {
+      title: 'Career Portal',
+      href: '/careers',
+      icon: Globe,
+      roles: [UserRole.ADMIN, UserRole.HR_MANAGER, UserRole.RECRUITER, UserRole.HIRING_MANAGER, UserRole.INTERVIEWER],
     },
     {
       title: 'Settings',
@@ -125,18 +131,6 @@ export function AppShell({
             {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
         </div>
-
-        {!collapsed && (
-          <div className="p-3 border-b m-3 rounded-lg bg-muted/50 flex items-center justify-between">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
-              <div className="truncate">
-                <p className="text-xs font-semibold truncate">{tenantName}</p>
-                <p className="text-[10px] text-muted-foreground">Enterprise Tenant</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         <nav className="flex-1 space-y-1 p-3 overflow-y-auto">
           {filteredNav.map((item) => {
@@ -207,6 +201,12 @@ export function AppShell({
           </div>
 
           <div className="flex items-center gap-4">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/careers">
+                <Globe className="mr-2 h-4 w-4" /> Public Careers
+              </Link>
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="relative h-9 w-9 p-0 rounded-full">
@@ -219,7 +219,7 @@ export function AppShell({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex flex-col items-start py-2">
                   <p className="text-xs font-medium">New Candidate Shortlisted</p>
-                  <p className="text-[10px] text-muted-foreground">Sarah Jenkins scored 94% match for Senior Full Stack</p>
+                  <p className="text-[10px] text-muted-foreground">Sarah J. scored 94% match for Senior Full Stack</p>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex flex-col items-start py-2">
                   <p className="text-xs font-medium">Interview Feedback Submitted</p>
@@ -266,7 +266,7 @@ export function AppShell({
             <CommandItem onSelect={() => setCommandOpen(false)}>Dashboard</CommandItem>
             <CommandItem onSelect={() => setCommandOpen(false)}>Jobs</CommandItem>
             <CommandItem onSelect={() => setCommandOpen(false)}>Candidates</CommandItem>
-            <CommandItem onSelect={() => setCommandOpen(false)}>Pipeline</CommandItem>
+            <CommandItem onSelect={() => setCommandOpen(false)}>Recruitments</CommandItem>
             <CommandItem onSelect={() => setCommandOpen(false)}>Interviews</CommandItem>
           </CommandGroup>
         </CommandList>
