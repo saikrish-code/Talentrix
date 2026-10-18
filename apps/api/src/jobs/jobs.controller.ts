@@ -1,13 +1,4 @@
-﻿import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+﻿import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { JobsService } from './jobs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -53,6 +44,14 @@ export class JobsController {
       ...(search ? { search } : {}),
     };
     return this.jobsService.findAll(filters, tenantId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get(':id/shortlist')
+  @ApiOperation({ summary: 'Get AI Shortlist of candidates ranked by pgvector cosine similarity + LLM scoring' })
+  getShortlist(@Param('id') id: string) {
+    return this.jobsService.getShortlist(id);
   }
 
   @UseGuards(JwtAuthGuard)

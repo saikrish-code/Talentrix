@@ -104,6 +104,11 @@ export class JobsService {
     return job;
   }
 
+  async getShortlist(jobId: string) {
+    await this.findOne(jobId);
+    return this.aiServices.getShortlistForJob(jobId);
+  }
+
   async update(id: string, dto: UpdateJobDto) {
     await this.findOne(id);
 

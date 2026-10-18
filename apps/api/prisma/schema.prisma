@@ -320,6 +320,8 @@ model Application {
   source               String?
   referredById         String?
   stageHistory         Json[]
+  prescreenTranscript  Json?
+  prescreenSummary     Json?
   tenantId             String
 
   job       Job              @relation(fields: [jobId], references: [id])

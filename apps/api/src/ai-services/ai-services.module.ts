@@ -7,8 +7,10 @@ import { AnthropicProvider } from './providers/anthropic.provider';
 import { GoogleProvider } from './providers/google.provider';
 import { AzureOpenAiProvider } from './providers/azure-openai.provider';
 import { OllamaProvider } from './providers/ollama.provider';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [AiServicesController],
   providers: [
     AiServicesService,

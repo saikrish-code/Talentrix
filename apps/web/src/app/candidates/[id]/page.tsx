@@ -4,14 +4,16 @@ import * as React from 'react';
 import { useParams } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge, Avatar, AvatarFallback } from '@talentrix/ui';
-import { UserRole, ApplicationStatus } from '@talentrix/shared-types';
-import { FileText, Mail, Phone, MapPin, Linkedin, Github, Download, Sparkles, CheckCircle2 } from 'lucide-react';
+import { UserRole } from '@talentrix/shared-types';
+import { FileText, Download, Sparkles, CheckCircle2, AlertCircle, Clock, DollarSign, ThumbsUp, PauseCircle, XCircle, Users, AlertTriangle } from 'lucide-react';
 
 export default function CandidateProfilePage() {
   const params = useParams();
   const id = params?.['id'] as string;
 
-  // Mock candidate profile data
+  const [recruiterDecision, setRecruiterDecision] = React.useState<string | null>(null);
+
+  // Mock candidate profile data including panel summary
   const candidate = {
     id: id || 'cand_1',
     name: 'Sarah Jenkins',
@@ -51,6 +53,23 @@ export default function CandidateProfilePage() {
         gpa: 3.85,
       },
     ],
+    prescreenSummary: {
+      keyStrengths: ['Deep expertise in React & TypeScript architecture', 'Direct experience scaling microservices at Stripe', 'Excellent asynchronous communication'],
+      concerns: ['Slightly higher salary expectation than baseline ($185k)'],
+      availability: '2 weeks notice',
+      salaryExpectation: '$180,000 / yr',
+      suggestion: 'RECOMMEND',
+      rationale: 'Candidate successfully completed async pre-screening and demonstrated exceptional clarity on distributed systems design.',
+    },
+    panelSummary: {
+      consensusStrengths: ['Exceptional system design and problem solving', 'Strong cultural alignment and mentorship capability'],
+      consensusWeaknesses: ['Minor hesitation on database sharding trade-offs'],
+      agreementAreas: ['Unanimous praise for coding standards and communication skills'],
+      disagreementAreas: ['Interviewer A rated System Design 5/5, while Interviewer B rated it 3/5 citing architectural depth.'],
+      overallRecommendation: 'YES',
+      divergenceFlag: true,
+      debriefPrompt: 'Score divergence detected (ratings span 2 points on technical depth). Schedule a 30-minute debrief meeting before issuing offer.',
+    },
   };
 
   return (
@@ -66,6 +85,11 @@ export default function CandidateProfilePage() {
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold tracking-tight">{candidate.name}</h1>
                 <Badge variant="success">AI Match: 94%</Badge>
+                {recruiterDecision && (
+                  <Badge variant={recruiterDecision === 'RECOMMEND' ? 'success' : recruiterDecision === 'HOLD' ? 'warning' : 'destructive'}>
+                    Recruiter Status: {recruiterDecision}
+                  </Badge>
+                )}
               </div>
               <p className="text-sm text-muted-foreground">{candidate.currentTitle} at {candidate.currentCompany} • {candidate.location}</p>
             </div>
@@ -80,8 +104,142 @@ export default function CandidateProfilePage() {
 
         {/* Side-by-Side View */}
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Left: AI Parsed Profile Data */}
+          {/* Left: AI Pre-Screen Summary, Panel Summary & Parsed Profile */}
           <div className="space-y-6">
+            {/* Panel Summary Card */}
+            <Card className="border-amber-500/50 bg-amber-500/5">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-amber-600" />
+                    <CardTitle className="text-base">Panel Summary & Interview Synthesis</CardTitle>
+                  </div>
+                  <Badge variant="warning">Consensus: {candidate.panelSummary.overallRecommendation}</Badge>
+                </div>
+                <CardDescription>Synthesized from all completed interviewer scorecards</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-0">
+                {candidate.panelSummary.divergenceFlag && (
+                  <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 p-3 flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-amber-700">Divergence Flagged</p>
+                      <p className="text-xs text-muted-foreground">{candidate.panelSummary.debriefPrompt}</p>
+                      <Button size="sm" variant="outline" className="mt-2 text-xs bg-background">
+                        Schedule Debrief Meeting
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Agreement Areas</p>
+                  <ul className="space-y-1 text-xs text-muted-foreground">
+                    {candidate.panelSummary.agreementAreas.map((a, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" /> {a}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Disagreement / Divergence Areas</p>
+                  <ul className="space-y-1 text-xs text-muted-foreground">
+                    {candidate.panelSummary.disagreementAreas.map((d, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" /> {d}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* AI Pre-Screen Summary Card */}
+            <Card className="border-primary/40 bg-primary/5">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-base">AI Pre-Screen Summary</CardTitle>
+                  </div>
+                  <Badge variant="outline" className="text-[10px] font-mono bg-background">AI Generated • Requires Recruiter Sign-off</Badge>
+                </div>
+                <CardDescription>Synthesized from async chat screening transcript & resume gap analysis</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-0">
+                <div className="grid grid-cols-2 gap-4 text-xs">
+                  <div className="flex items-center gap-2 bg-background p-2.5 rounded-md border">
+                    <Clock className="h-4 w-4 text-primary shrink-0" />
+                    <div>
+                      <p className="text-muted-foreground">Availability</p>
+                      <p className="font-semibold">{candidate.prescreenSummary.availability}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-background p-2.5 rounded-md border">
+                    <DollarSign className="h-4 w-4 text-primary shrink-0" />
+                    <div>
+                      <p className="text-muted-foreground">Salary Expectation</p>
+                      <p className="font-semibold">{candidate.prescreenSummary.salaryExpectation}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Key Strengths</p>
+                  <ul className="space-y-1 text-xs text-muted-foreground">
+                    {candidate.prescreenSummary.keyStrengths.map((s, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" /> {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Potential Concerns</p>
+                  <ul className="space-y-1 text-xs text-muted-foreground">
+                    {candidate.prescreenSummary.concerns.map((c, i) => (
+                      <li key={i} className="flex items-center gap-2">
+                        <AlertCircle className="h-3.5 w-3.5 text-amber-500 shrink-0" /> {c}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="border-t pt-4 space-y-2">
+                  <p className="text-xs font-semibold">Recruiter Confirmation Required</p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant={recruiterDecision === 'RECOMMEND' ? 'default' : 'outline'}
+                      className="flex-1 text-xs"
+                      onClick={() => setRecruiterDecision('RECOMMEND')}
+                    >
+                      <ThumbsUp className="mr-1.5 h-3.5 w-3.5 text-emerald-500" /> Recommend
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={recruiterDecision === 'HOLD' ? 'default' : 'outline'}
+                      className="flex-1 text-xs"
+                      onClick={() => setRecruiterDecision('HOLD')}
+                    >
+                      <PauseCircle className="mr-1.5 h-3.5 w-3.5 text-amber-500" /> Hold
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={recruiterDecision === 'REJECT' ? 'destructive' : 'outline'}
+                      className="flex-1 text-xs"
+                      onClick={() => setRecruiterDecision('REJECT')}
+                    >
+                      <XCircle className="mr-1.5 h-3.5 w-3.5" /> Reject
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2">
@@ -114,16 +272,6 @@ export default function CandidateProfilePage() {
                       <p className="text-sm font-semibold">{exp.title} — <span className="text-primary">{exp.company}</span></p>
                       <p className="text-xs text-muted-foreground font-mono">{exp.startDate} - {exp.endDate ?? 'Present'}</p>
                       <p className="text-xs leading-relaxed text-muted-foreground">{exp.description}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="space-y-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Education</h3>
-                  {candidate.education.map((edu, i) => (
-                    <div key={i} className="space-y-0.5">
-                      <p className="text-sm font-semibold">{edu.degree}, {edu.field}</p>
-                      <p className="text-xs text-muted-foreground">{edu.institution} ({edu.startDate} - {edu.endDate})</p>
                     </div>
                   ))}
                 </div>

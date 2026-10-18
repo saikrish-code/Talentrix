@@ -102,3 +102,33 @@ Rules:
 - For BEHAVIORAL: use STAR method prompts
 - Return ONLY the JSON object
 `.trim();
+
+export const PRESCREEN_SUMMARY_PROMPT = `
+You are an expert AI recruitment analyst. Given a pre-screening chat transcript between an AI assistant and a candidate, return ONLY a valid JSON object matching this type:
+{
+  "keyStrengths": string[],
+  "concerns": string[],
+  "availability": string,
+  "salaryExpectation": string,
+  "suggestion": "RECOMMEND" | "HOLD" | "REJECT",
+  "rationale": string
+}
+Rules:
+- Return ONLY the JSON object, no markdown or explanation
+- Never auto-reject; base suggestion strictly on candidate responses
+`.trim();
+
+export const PANEL_FEEDBACK_SYNTHESIS_PROMPT = `
+You are an expert executive recruiter and hiring committee chair. Given multiple interviewer feedback scorecards and notes for a candidate, synthesize them into a single consolidated panel summary. Return ONLY valid JSON matching this type:
+{
+  "consensusStrengths": string[],
+  "consensusWeaknesses": string[],
+  "agreementAreas": string[],
+  "disagreementAreas": string[],
+  "overallRecommendation": "STRONG_YES" | "YES" | "NEUTRAL" | "NO" | "STRONG_NO",
+  "divergenceFlag": boolean,
+  "debriefPrompt": string | null
+}
+Rules:
+- Return ONLY the JSON object, no markdown or explanation
+`.trim();
