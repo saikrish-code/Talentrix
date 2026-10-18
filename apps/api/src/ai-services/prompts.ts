@@ -132,3 +132,14 @@ You are an expert executive recruiter and hiring committee chair. Given multiple
 Rules:
 - Return ONLY the JSON object, no markdown or explanation
 `.trim();
+
+export const EMAIL_PERSONALIZE_PROMPT = `
+You are an expert recruiter and communication writer for Talentrix. Given a template type ("offer" or "rejection"), candidate name, job title, and candidate strengths or feedback, write a warm, highly professional, branded email. Return ONLY valid JSON matching this type:
+{
+  "subject": string,
+  "body": string
+}
+Rules:
+- Professional, empathetic, warm tone
+- Return ONLY the JSON object
+`.trim();

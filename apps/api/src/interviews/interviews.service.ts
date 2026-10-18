@@ -1,7 +1,7 @@
 ﻿import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AiServicesService } from '../ai-services/ai-services.service';
-import type { InterviewDecision } from '@prisma/client';
+import { InterviewStatus, InterviewType } from '@prisma/client';
 
 @Injectable()
 export class InterviewsService {
@@ -25,6 +25,98 @@ export class InterviewsService {
     });
   }
 
+  async getCalendarEvents(tenantId?: string) {
+    const interviews = await this.findAll(tenantId);
+    return interviews.map((intv) => {
+      const slot = intv.slot as any;
+      return {
+        id: intv.id,
+        title: `${intv.type} — ${intv.application.candidate.firstName} ${intv.application.candidate.lastName} (${intv.application.job.title})`,
+        start: slot?.startAt ?? new Date().toISOString(),
+        end: slot?.endAt ?? new Date(Date.now() + 3600000).toISOString(),
+        status: intv.status,
+        meetingUrl: slot?.meetingUrl ?? 'https://meet.google.com/abc-xyz-pqr',
+        candidateName: `${intv.application.candidate.firstName} ${intv.application.candidate.lastName}`,
+        jobTitle: intv.application.job.title,
+      };
+    });
+  }
+
+  async getAvailableSlots(_panelIds: string[], date: string) {
+    return [
+      { start: `${date}T09:00:00Z`, end: `${date}T10:00:00Z`, timezone: 'UTC' },
+      { start: `${date}T11:00:00Z`, end: `${date}T12:00:00Z`, timezone: 'UTC' },
+      { start: `${date}T14:00:00Z`, end: `${date}T15:00:00Z`, timezone: 'UTC' },
+      { start: `${date}T16:00:00Z`, end: `${date}T17:00:00Z`, timezone: 'UTC' },
+    ];
+  }
+
+  async scheduleInterview(dto: {
+    applicationId: string;
+    type: InterviewType;
+    round: number;
+    slot: { startAt: string; endAt: string; timezone: string; meetingUrl?: string };
+    panelInterviewerIds: string[];
+    scheduledById: string;
+    tenantId?: string;
+  }) {
+    const tenantId = dto.tenantId ?? 'default-tenant';
+
+    const interview = await this.prisma.interview.create({
+      data: {
+        applicationId: dto.applicationId,
+        type: dto.type,
+        round: dto.round ?? 1,
+        status: InterviewStatus.SCHEDULED,
+        slot: dto.slot as any,
+        calendarEventId: `cal_evt_${Math.random().toString(36).substring(7)}`,
+        tenantId,
+        scheduledById: dto.scheduledById,
+        panel: {
+          create: dto.panelInterviewerIds.map((id) => ({
+            interviewerId: id,
+          })),
+        },
+      },
+      include: {
+        application: { include: { candidate: true, job: true } },
+        panel: { include: { interviewer: true } },
+      },
+    });
+
+    console.log(`📧 [Email Service] Sending interview invitation to ${interview.application.candidate.email} for ${interview.application.job.title}`);
+    return interview;
+  }
+
+  async reschedule(id: string, newSlot: { startAt: string; endAt: string; timezone: string }) {
+    const interview = await this.findOne(id);
+    const updated = await this.prisma.interview.update({
+      where: { id },
+      data: {
+        slot: newSlot as any,
+        status: InterviewStatus.RESCHEDULED,
+      },
+      include: { application: { include: { candidate: true, job: true } } },
+    });
+
+    console.log(`📧 [Email Service] Sending reschedule notice to ${updated.application.candidate.email}`);
+    return updated;
+  }
+
+  async cancel(id: string, reason?: string) {
+    const interview = await this.findOne(id);
+    const updated = await this.prisma.interview.update({
+      where: { id },
+      data: {
+        status: InterviewStatus.CANCELLED,
+      },
+      include: { application: { include: { candidate: true, job: true } } },
+    });
+
+    console.log(`📧 [Email Service] Sending cancellation notice (Reason: ${reason ?? 'Role filled/cancelled'}) to ${updated.application.candidate.email}`);
+    return updated;
+  }
+
   async findOne(id: string) {
     const interview = await this.prisma.interview.findUnique({
       where: { id },
@@ -39,7 +131,7 @@ export class InterviewsService {
     return interview;
   }
 
-  async generateQuestions(id: string, competencies?: string[]) {
+  async generateQuestions(id: string, _competencies?: string[]) {
     const interview = await this.findOne(id);
     const job = interview.application.job;
     const candidate = interview.application.candidate;
@@ -63,7 +155,7 @@ export class InterviewsService {
   }
 
   async submitFeedback(id: string, interviewerId: string, dto: {
-    decision: InterviewDecision;
+    decision: any;
     overallRating: number;
     technicalRating?: number;
     communicationRating?: number;

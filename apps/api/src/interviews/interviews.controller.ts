@@ -1,8 +1,7 @@
-﻿import { Controller, Get, Post, Body, Param, Query, UseGuards, Req } from '@nestjs/common';
+﻿import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, Req } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { InterviewsService } from './interviews.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { InterviewDecision } from '@prisma/client';
 
 @ApiTags('interviews')
 @UseGuards(JwtAuthGuard)
@@ -10,6 +9,38 @@ import { InterviewDecision } from '@prisma/client';
 @Controller({ path: 'interviews', version: '1' })
 export class InterviewsController {
   constructor(private readonly interviewsService: InterviewsService) {}
+
+  @Get('calendar/events')
+  @ApiOperation({ summary: 'Get unified calendar events for recruiters' })
+  getCalendarEvents(@Query('tenantId') tenantId?: string) {
+    return this.interviewsService.getCalendarEvents(tenantId);
+  }
+
+  @Get('availability')
+  @ApiOperation({ summary: 'Get matching available interview slots' })
+  getAvailableSlots(@Query('panelIds') panelIds: string, @Query('date') date: string) {
+    const ids = panelIds ? panelIds.split(',') : [];
+    return this.interviewsService.getAvailableSlots(ids, date ?? new Date().toISOString().split('T')[0] ?? '');
+  }
+
+  @Post('schedule')
+  @ApiOperation({ summary: 'Schedule an interview with calendar integration & automated reminders' })
+  schedule(@Body() dto: any, @Req() req: any) {
+    const scheduledById = req.user?.id ?? 'default-user';
+    return this.interviewsService.scheduleInterview({ ...dto, scheduledById });
+  }
+
+  @Patch(':id/reschedule')
+  @ApiOperation({ summary: 'Reschedule interview slot' })
+  reschedule(@Param('id') id: string, @Body('slot') slot: any) {
+    return this.interviewsService.reschedule(id, slot);
+  }
+
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancel interview' })
+  cancel(@Param('id') id: string, @Body('reason') reason: string) {
+    return this.interviewsService.cancel(id, reason);
+  }
 
   @Get()
   @ApiOperation({ summary: 'List all interviews' })

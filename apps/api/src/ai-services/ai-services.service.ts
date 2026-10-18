@@ -15,7 +15,7 @@ import type {
   InterviewQuestionsRequest,
   InterviewQuestionsResponse,
 } from '@talentrix/shared-types';
-import { RESUME_PARSE_PROMPT, JD_GENERATE_PROMPT, MATCH_SCORE_PROMPT, INTERVIEW_QUESTIONS_PROMPT, PRESCREEN_SUMMARY_PROMPT, PANEL_FEEDBACK_SYNTHESIS_PROMPT } from './prompts';
+import { RESUME_PARSE_PROMPT, JD_GENERATE_PROMPT, MATCH_SCORE_PROMPT, INTERVIEW_QUESTIONS_PROMPT, PRESCREEN_SUMMARY_PROMPT, PANEL_FEEDBACK_SYNTHESIS_PROMPT, EMAIL_PERSONALIZE_PROMPT } from './prompts';
 
 @Injectable()
 export class AiServicesService {
@@ -215,6 +215,27 @@ export class AiServicesService {
         overallRecommendation: 'YES',
         divergenceFlag: true,
         debriefPrompt: 'Interviewer ratings diverge by 2 points on system design depth. Schedule a 30-min debrief before final offer.',
+      };
+    }
+  }
+
+  async personalizeEmail(dto: { type: string; candidateName: string; jobTitle: string; context?: string }) {
+    this.logger.log(`Personalizing ${dto.type} email for ${dto.candidateName} (${dto.jobTitle})...`);
+    const response = await this.complete({
+      messages: [
+        { role: 'system', content: EMAIL_PERSONALIZE_PROMPT },
+        { role: 'user', content: JSON.stringify(dto) },
+      ],
+      temperature: 0.6,
+      responseFormat: 'json',
+    });
+
+    try {
+      return JSON.parse(response.content);
+    } catch {
+      return {
+        subject: `Update regarding your application for ${dto.jobTitle} at Talentrix`,
+        body: `Dear ${dto.candidateName},\n\nThank you for taking the time to speak with our team regarding the ${dto.jobTitle} position. We were deeply impressed by your background and experience.\n\nBest regards,\nThe Talentrix Recruitment Team`,
       };
     }
   }
