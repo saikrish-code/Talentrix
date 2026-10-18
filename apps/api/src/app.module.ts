@@ -11,6 +11,7 @@ import { InterviewsModule } from './interviews/interviews.module';
 import { AiServicesModule } from './ai-services/ai-services.module';
 import { StorageModule } from './storage/storage.module';
 import { HealthModule } from './health/health.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { appConfig } from './config/app.config';
 import { databaseConfig } from './config/database.config';
 import { authConfig } from './config/auth.config';
@@ -46,6 +47,7 @@ import { aiConfig } from './config/ai.config';
     AiServicesModule,
     StorageModule,
     HealthModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}
