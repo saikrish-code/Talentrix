@@ -9,10 +9,22 @@ export { cn } from './lib/utils';
 export { Button, buttonVariants } from './components/button';
 export { Badge, badgeVariants } from './components/badge';
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './components/card';
-export { Input } from './components/input';
+export { Input, type InputProps } from './components/input';
 export { Label } from './components/label';
 export { Separator } from './components/separator';
 export { Avatar, AvatarImage, AvatarFallback } from './components/avatar';
+export { Progress } from './components/progress';
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from './components/command';
 export {
   Select,
   SelectContent,
@@ -69,3 +81,4 @@ export { LoadingSpinner } from './components/talentrix/loading-spinner';
 export { EmptyState } from './components/talentrix/empty-state';
 export { PageHeader } from './components/talentrix/page-header';
 export { DataTable } from './components/talentrix/data-table';
+export { Logo, type LogoProps } from './components/talentrix/logo';
